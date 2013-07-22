@@ -1,0 +1,1 @@
+/usr/bin/c++   -pg -DNDEBUG -O3    CMakeFiles/mkAppearance.dir/main.cpp.o  -o mkAppearance  -L/usr/local/lib -rdynamic -lGLU -lGL -lSM -lICE -lX11 -lXext -lglut -lXmu -lXi -lglm -lpng -ljpeg -Wl,-rpath,/usr/local/lib 
