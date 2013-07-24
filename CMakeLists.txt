@@ -27,6 +27,7 @@ PROJECT(mkAppearance)
 # 実行に必要なライブラリのパッケージを見つける
 FIND_PACKAGE(OpenGL)
 FIND_PACKAGE(GLUT)
+find_package(OpenCV)
 
 # バージョン番号
 # SET(serial "1.0.0")
@@ -43,7 +44,7 @@ SET(SOURCE main.cpp)
 ADD_EXECUTABLE(mkAppearance ${SOURCE})
 
 # ライブラリとリンクする
-TARGET_LINK_LIBRARIES(mkAppearance ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} glm png jpeg)
+TARGET_LINK_LIBRARIES(mkAppearance ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${OpenCV_LIBRARIES} GLU glm png jpeg)
 
 
 # バージョン番号の適用

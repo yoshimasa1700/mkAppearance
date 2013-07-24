@@ -15,11 +15,11 @@
 #include <math.h>
 #include <glm.h>
 
+#include <opencv2/opencv.hpp>
 
 #define bool int
 #define true 1
 #define false 0
-
 
 /* Ortho (if used) */
 double _left = 0.0;		/* ortho view volume params */
@@ -48,13 +48,11 @@ double _matrix[16];		/* model matrix and supporting linear algebra functions */
 double _matrixI[16];
 double vlen(double x, double y, double z);
 void pos(double *px, double *py, double *pz, const int x, const int y,
-     const int *viewport);
+         const int *viewport);
 void getMatrix();
 void invertMatrix(const GLdouble * m, GLdouble * out);
 
 int full_screen = 0;
-
-
 
 /* Global Variables for this app */
 GLMmodel *pmodel = NULL;	/* the loaded model */
@@ -68,10 +66,10 @@ int smooth = 1;
 int material = 1;
 int textured = 1;
 int two_sided = 1;
-int show_help = 1;		/* help toggle */
+int show_help = 0;		/* help toggle */
 int stereo = 0;			/* stereo init variable */
 int benchmark = 0;
-int centerZ = -3;
+int centerZ = -1;
 float auto_rotate = 0;
 int xrotate = 0;
 int yrotate = 1;
@@ -141,93 +139,84 @@ int main(int argc, char **argv)
     int i;
 
     if (argc > 1) {		/* make sure at least 2 args, program and file */
-      strncpy(filename, argv[argc - 1], sizeof(filename));	/* get the last arg as the file always */
+        strncpy(filename, argv[argc - 1], sizeof(filename));	/* get the last arg as the file always */
 
-    for (i = 0; i < argc; i++) {	/* check for startup params */
-        if (strstr(argv[i], "-s"))
-        stereo = 1;
-        if (strstr(argv[i], "-f"))
-        full_screen = 1;
-    }
+        for (i = 0; i < argc; i++) {	/* check for startup params */
+            if (strstr(argv[i], "-s"))
+                stereo = 1;
+            if (strstr(argv[i], "-f"))
+                full_screen = 1;
+        }
     } else {			/* user only entered program name, help them */
 
-    printf("Usage: %s [-s] [-f] <obj filename>\n", argv[0]);
-    exit(0);
+        printf("Usage: %s [-s] [-f] <obj filename>\n", argv[0]);
+        exit(0);
     }
 
 
     glutInit(&argc, argv);
     if (stereo)
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH |
-                GLUT_STEREO);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH |
+                            GLUT_STEREO);
     else
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 #if 0
     if (game_mode) {
-    glutGameModeString("1024x768:32@75");	/*  Select The 640x480 In 16bpp Mode */
-    if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
-        glutEnterGameMode();	/*  Enter Full Screen */
-    else
-        game_mode = 0;	/*  Cannot Enter Game Mode, Switch To Windowed */
+        glutGameModeString("1024x768:32@75");	/*  Select The 640x480 In 16bpp Mode */
+        if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+            glutEnterGameMode();	/*  Enter Full Screen */
+        else
+            game_mode = 0;	/*  Cannot Enter Game Mode, Switch To Windowed */
     }
     if (!game_mode) {
-    glutInitWindowSize(1024, 768);	/*  Window Size If We Start In Windowed Mode */
-    glutCreateWindow("Wavefront Obj File Viewer");
+        glutInitWindowSize(1024, 768);	/*  Window Size If We Start In Windowed Mode */
+        glutCreateWindow("Wavefront Obj File Viewer");
     }
 #endif				/* 0 */
-    glutInitWindowSize(1024, 768);	/*  Window Size If We Start In Windowed Mode */
+    glutInitWindowSize(640, 480);	/*  Window Size If We Start In Windowed Mode */
     glutCreateWindow("Wavefront Obj File Viewer");
     if (full_screen)
-    glutFullScreen();
+        glutFullScreen();
 
 
     glutDisplayFunc(Display);
-    glutKeyboardFunc(Keyboard);
+    //glutKeyboardFunc(Keyboard);
     getMatrix();
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClearAccum(0.0, 0.0, 0.0, 0.0);
     glutReshapeFunc(Reshape);
-    glutMouseFunc(Mouse);
+    //glutMouseFunc(Mouse);
     glutMotionFunc(Motion);
     glutIdleFunc(NULL);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+//    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+//    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+//    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+//    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+//    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+//    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+//    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+//    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
     if (lighting)
-    glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHTING);
     if (lighting)
-    glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHT0);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     glEnable(GL_TEXTURE_2D);
 
-#ifdef SMOOTH_HINT
-    if (smooth_hint) {
-    glEnable(GL_LINE_SMOOTH);
-    /* glEnable (GL_POLYGON_SMOOTH); */
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    /* glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
-    }
-#endif				/*0 */
-
     if (!pmodel) {		/* load up the model */
-    pmodel = glmReadOBJ(filename);
-    if (!pmodel) {
-        printf("\nUsage: objviewV2 <-s> <obj filename>\n");
-        exit(0);
-    }
-    glmUnitize(pmodel);
-    glmVertexNormals(pmodel, 90.0, GL_TRUE);
+        pmodel = glmReadOBJ(filename);
+        if (!pmodel) {
+            printf("\nUsage: objviewV2 <-s> <obj filename>\n");
+            exit(0);
+        }
+        glmUnitize(pmodel);
+        glmVertexNormals(pmodel, 90.0, GL_TRUE);
     }
 
     glutMainLoop();
@@ -275,28 +264,28 @@ void Mouse(int button, int state, int x, int y)
     _mouseY = y;
 
     if (state == GLUT_UP)
-    switch (button) {
-    case GLUT_LEFT_BUTTON:
-        _mouseLeft = false;
-        break;
-    case GLUT_MIDDLE_BUTTON:
-        _mouseMiddle = false;
-        break;
-    case GLUT_RIGHT_BUTTON:
-        _mouseRight = false;
-        break;
-    } else
-    switch (button) {
-    case GLUT_LEFT_BUTTON:
-        _mouseLeft = true;
-        break;
-    case GLUT_MIDDLE_BUTTON:
-        _mouseMiddle = true;
-        break;
-    case GLUT_RIGHT_BUTTON:
-        _mouseRight = true;
-        break;
-    }
+        switch (button) {
+        case GLUT_LEFT_BUTTON:
+            _mouseLeft = false;
+            break;
+        case GLUT_MIDDLE_BUTTON:
+            _mouseMiddle = false;
+            break;
+        case GLUT_RIGHT_BUTTON:
+            _mouseRight = false;
+            break;
+        } else
+        switch (button) {
+        case GLUT_LEFT_BUTTON:
+            _mouseLeft = true;
+            break;
+        case GLUT_MIDDLE_BUTTON:
+            _mouseMiddle = true;
+            break;
+        case GLUT_RIGHT_BUTTON:
+            _mouseRight = true;
+            break;
+        }
 
     glGetIntegerv(GL_VIEWPORT, viewport);
     pos(&_dragPosX, &_dragPosY, &_dragPosZ, x, y, viewport);
@@ -316,61 +305,61 @@ void Motion(int x, int y)
     glGetIntegerv(GL_VIEWPORT, viewport);
 
     if (dx == 0 && dy == 0)
-    return;
+        return;
 
     if (_mouseMiddle || (_mouseLeft && _mouseRight)) {
-    /* double s = exp((double)dy*0.01); */
-    /* glScalef(s,s,s); */
-    /* if(abs(prev_z) <= 1.0) */
+        /* double s = exp((double)dy*0.01); */
+        /* glScalef(s,s,s); */
+        /* if(abs(prev_z) <= 1.0) */
 
-    glLoadIdentity();
-    glTranslatef(0, 0, dy * 0.01);
-    glMultMatrixd(_matrix);
+        glLoadIdentity();
+        glTranslatef(0, 0, dy * 0.01);
+        glMultMatrixd(_matrix);
 
 
 
-    changed = true;
+        changed = true;
     } else if (_mouseLeft) {
-    double ax, ay, az;
-    double bx, by, bz;
-    double angle;
+        double ax, ay, az;
+        double bx, by, bz;
+        double angle;
 
-    ax = dy;
-    ay = dx;
-    az = 0.0;
-    angle = vlen(ax, ay, az) / (double) (viewport[2] + 1) * 180.0;
+        ax = dy;
+        ay = dx;
+        az = 0.0;
+        angle = vlen(ax, ay, az) / (double) (viewport[2] + 1) * 180.0;
 
-    /* Use inverse matrix to determine local axis of rotation */
+        /* Use inverse matrix to determine local axis of rotation */
 
-    bx = _matrixI[0] * ax + _matrixI[4] * ay + _matrixI[8] * az;
-    by = _matrixI[1] * ax + _matrixI[5] * ay + _matrixI[9] * az;
-    bz = _matrixI[2] * ax + _matrixI[6] * ay + _matrixI[10] * az;
+        bx = _matrixI[0] * ax + _matrixI[4] * ay + _matrixI[8] * az;
+        by = _matrixI[1] * ax + _matrixI[5] * ay + _matrixI[9] * az;
+        bz = _matrixI[2] * ax + _matrixI[6] * ay + _matrixI[10] * az;
 
-    glRotatef(angle, bx, by, bz);
+        glRotatef(angle, bx, by, bz);
 
-    changed = true;
+        changed = true;
     } else if (_mouseRight) {
-    double px, py, pz;
+        double px, py, pz;
 
-    pos(&px, &py, &pz, x, y, viewport);
+        pos(&px, &py, &pz, x, y, viewport);
 
-    glLoadIdentity();
-    glTranslatef(px - _dragPosX, py - _dragPosY, pz - _dragPosZ);
-    glMultMatrixd(_matrix);
+        glLoadIdentity();
+        glTranslatef(px - _dragPosX, py - _dragPosY, pz - _dragPosZ);
+        glMultMatrixd(_matrix);
 
-    _dragPosX = px;
-    _dragPosY = py;
-    _dragPosZ = pz;
+        _dragPosX = px;
+        _dragPosY = py;
+        _dragPosZ = pz;
 
-    changed = true;
+        changed = true;
     }
 
     _mouseX = x;
     _mouseY = y;
 
     if (changed) {
-    getMatrix();
-    glutPostRedisplay();
+        getMatrix();
+        glutPostRedisplay();
     }
 }
 
@@ -378,11 +367,11 @@ void Motion(int x, int y)
 void AutoSpin(void)
 {
     if (xrotate || yrotate || zrotate) {
-    /* printf ("\nXrot =%d, yRot = %d, ZRot = %d", xrotate, yrotate, zrotate); */
+        /* printf ("\nXrot =%d, yRot = %d, ZRot = %d", xrotate, yrotate, zrotate); */
 
-    glRotatef(1, xrotate, yrotate, zrotate);
-    getMatrix();
-    glutPostRedisplay();
+        glRotatef(1, xrotate, yrotate, zrotate);
+        getMatrix();
+        glutPostRedisplay();
     }
 
 }
@@ -409,11 +398,11 @@ Keyboard(unsigned char key, int x, int y)
         int i;
         /* Resetting Scene */
         for (i = 0; i < 16; i++) {
-        if (i == 0 || i == 5 || i == 10 || i == 15) {
-            _matrix[i] = 1;
-        } else {
-            _matrix[i] = 0;
-        }
+            if (i == 0 || i == 5 || i == 10 || i == 15) {
+                _matrix[i] = 1;
+            } else {
+                _matrix[i] = 0;
+            }
         }
         prev_z = 0;
         glLoadIdentity();
@@ -431,9 +420,9 @@ Keyboard(unsigned char key, int x, int y)
     {
         benchmark = !benchmark;
         if (benchmark)
-        glutIdleFunc(AutoSpin);
+            glutIdleFunc(AutoSpin);
         else
-        glutIdleFunc(NULL);
+            glutIdleFunc(NULL);
         break;
     }
     case 'x':
@@ -457,20 +446,20 @@ Keyboard(unsigned char key, int x, int y)
 
     case 'l':
     case 'L':
-    lighting = !lighting;
-    break;
+        lighting = !lighting;
+        break;
 #ifdef SMOOTH_HINT
     case 'l':
     case 'L':{
         smooth_hint = !smooth_hint;
         if (smooth_hint) {
-        glEnable(GL_LINE_SMOOTH);
-        /* glEnable (GL_POLYGON_SMOOTH); */
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        /* glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
+            glEnable(GL_LINE_SMOOTH);
+            /* glEnable (GL_POLYGON_SMOOTH); */
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+            /* glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
         } else {
-        glDisable(GL_LINE_SMOOTH);
-        /* glDisable (GL_POLYGON_SMOOTH); */
+            glDisable(GL_LINE_SMOOTH);
+            /* glDisable (GL_POLYGON_SMOOTH); */
         }
         break;
     }
@@ -494,14 +483,14 @@ Keyboard(unsigned char key, int x, int y)
     case 'M':{
         material = !material;
         if (!material && textured)
-        textured = 0;
+            textured = 0;
         break;
     }
     case 't':
     case 'T':{
         textured = !textured;
         if (!material && textured)
-        material = 1;
+            material = 1;
         break;
     }
 #ifdef AVL
@@ -536,15 +525,15 @@ Keyboard(unsigned char key, int x, int y)
     case 9:
     {
         if (!full_screen) {
-        glutFullScreen();
-        full_screen = 1;
+            glutFullScreen();
+            full_screen = 1;
         }
 
         break;
     }
     case 27:
-    exit(0);
-    break;
+        exit(0);
+        break;
     default:{
         break;
     }			/* flush all other input                                 */
@@ -569,7 +558,7 @@ double vlen(double x, double y, double z)
 
 
 void pos(double *px, double *py, double *pz, const int x, const int y,
-     const int *viewport)
+         const int *viewport)
 {
     /*
        Use the ortho projection and viewport information
@@ -606,10 +595,10 @@ void getMatrix()
 void invertMatrix(const GLdouble * m, GLdouble * out)
 {
 
-/* NB. OpenGL Matrices are COLUMN major. */
+    /* NB. OpenGL Matrices are COLUMN major. */
 #define MAT(m,r,c) (m)[(c)*4+(r)]
 
-/* Here's some shorthand converting standard (row,column) to index. */
+    /* Here's some shorthand converting standard (row,column) to index. */
 #define m11 MAT(m,0,0)
 #define m12 MAT(m,0,1)
 #define m13 MAT(m,0,2)
@@ -652,40 +641,40 @@ void invertMatrix(const GLdouble * m, GLdouble * out)
 
     /* Run singularity test. */
     if (det == 0.0) {
-    /* printf("invert_matrix: Warning: Singular matrix.\n"); */
-/* 	  memcpy(out,_identity,16*sizeof(double)); */
+        /* printf("invert_matrix: Warning: Singular matrix.\n"); */
+        /* 	  memcpy(out,_identity,16*sizeof(double)); */
     } else {
-    GLdouble invDet = 1.0 / det;
-    /* Compute rest of inverse. */
-    tmp[0] *= invDet;
-    tmp[1] *= invDet;
-    tmp[2] *= invDet;
-    tmp[3] *= invDet;
+        GLdouble invDet = 1.0 / det;
+        /* Compute rest of inverse. */
+        tmp[0] *= invDet;
+        tmp[1] *= invDet;
+        tmp[2] *= invDet;
+        tmp[3] *= invDet;
 
-    tmp[4] = -(m12 * d34 - m13 * d24 + m14 * d23) * invDet;
-    tmp[5] = (m11 * d34 + m13 * d41 + m14 * d13) * invDet;
-    tmp[6] = -(m11 * d24 + m12 * d41 + m14 * d12) * invDet;
-    tmp[7] = (m11 * d23 - m12 * d13 + m13 * d12) * invDet;
+        tmp[4] = -(m12 * d34 - m13 * d24 + m14 * d23) * invDet;
+        tmp[5] = (m11 * d34 + m13 * d41 + m14 * d13) * invDet;
+        tmp[6] = -(m11 * d24 + m12 * d41 + m14 * d12) * invDet;
+        tmp[7] = (m11 * d23 - m12 * d13 + m13 * d12) * invDet;
 
-    /* Pre-compute 2x2 dets for first two rows when computing */
-    /* cofactors of last two rows. */
-    d12 = m11 * m22 - m21 * m12;
-    d13 = m11 * m23 - m21 * m13;
-    d23 = m12 * m23 - m22 * m13;
-    d24 = m12 * m24 - m22 * m14;
-    d34 = m13 * m24 - m23 * m14;
-    d41 = m14 * m21 - m24 * m11;
+        /* Pre-compute 2x2 dets for first two rows when computing */
+        /* cofactors of last two rows. */
+        d12 = m11 * m22 - m21 * m12;
+        d13 = m11 * m23 - m21 * m13;
+        d23 = m12 * m23 - m22 * m13;
+        d24 = m12 * m24 - m22 * m14;
+        d34 = m13 * m24 - m23 * m14;
+        d41 = m14 * m21 - m24 * m11;
 
-    tmp[8] = (m42 * d34 - m43 * d24 + m44 * d23) * invDet;
-    tmp[9] = -(m41 * d34 + m43 * d41 + m44 * d13) * invDet;
-    tmp[10] = (m41 * d24 + m42 * d41 + m44 * d12) * invDet;
-    tmp[11] = -(m41 * d23 - m42 * d13 + m43 * d12) * invDet;
-    tmp[12] = -(m32 * d34 - m33 * d24 + m34 * d23) * invDet;
-    tmp[13] = (m31 * d34 + m33 * d41 + m34 * d13) * invDet;
-    tmp[14] = -(m31 * d24 + m32 * d41 + m34 * d12) * invDet;
-    tmp[15] = (m31 * d23 - m32 * d13 + m33 * d12) * invDet;
+        tmp[8] = (m42 * d34 - m43 * d24 + m44 * d23) * invDet;
+        tmp[9] = -(m41 * d34 + m43 * d41 + m44 * d13) * invDet;
+        tmp[10] = (m41 * d24 + m42 * d41 + m44 * d12) * invDet;
+        tmp[11] = -(m41 * d23 - m42 * d13 + m43 * d12) * invDet;
+        tmp[12] = -(m32 * d34 - m33 * d24 + m34 * d23) * invDet;
+        tmp[13] = (m31 * d34 + m33 * d41 + m34 * d13) * invDet;
+        tmp[14] = -(m31 * d24 + m32 * d41 + m34 * d12) * invDet;
+        tmp[15] = (m31 * d23 - m32 * d13 + m33 * d12) * invDet;
 
-    memcpy(out, tmp, 16 * sizeof(GLdouble));
+        memcpy(out, tmp, 16 * sizeof(GLdouble));
     }
 
 #undef m11
@@ -722,24 +711,24 @@ void DrawModel(void)
     mode = GLM_NONE;		/* reset mode */
 
     if (smooth)
-    mode = mode | GLM_SMOOTH;
+        mode = mode | GLM_SMOOTH;
     else
-    mode = mode | GLM_FLAT;
+        mode = mode | GLM_FLAT;
 
     if (two_sided)
-    mode = mode | GLM_2_SIDED;
+        mode = mode | GLM_2_SIDED;
 
     if (material)
-    mode = mode | GLM_MATERIAL;
+        mode = mode | GLM_MATERIAL;
     else
-    mode = mode | GLM_COLOR;
+        mode = mode | GLM_COLOR;
 
     if (textured && material)
-    mode = mode | GLM_TEXTURE;
+        mode = mode | GLM_TEXTURE;
 
     glPushMatrix();
     if (pmodel)
-    glmDraw(pmodel, mode);
+        glmDraw(pmodel, mode);
     glPopMatrix();
 }
 
@@ -755,26 +744,26 @@ void DrawAxis(float scale)
 
     glBegin(GL_LINES);
 
-    glColor3f(1.0, 0.0, 0.0);
-    glVertex3f(.8f, 0.05f, 0.0);
-    glVertex3f(1.0, 0.25f, 0.0);	/*  Letter X */
-    glVertex3f(0.8f, .25f, 0.0);
-    glVertex3f(1.0, 0.05f, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glVertex3f(1.0, 0.0, 0.0);	/*  X axis */
+//    glColor3f(1.0, 0.0, 0.0);
+//    glVertex3f(.8f, 0.05f, 0.0);
+//    glVertex3f(1.0, 0.25f, 0.0);	/*  Letter X */
+//    glVertex3f(0.8f, .25f, 0.0);
+//    glVertex3f(1.0, 0.05f, 0.0);
+//    glVertex3f(0.0, 0.0, 0.0);
+//    glVertex3f(1.0, 0.0, 0.0);	/*  X axis */
 
-    glColor3f(0.0, 1.0, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glVertex3f(0.0, 1.0, 0.0);	/*  Y axis */
+//    glColor3f(0.0, 1.0, 0.0);
+//    glVertex3f(0.0, 0.0, 0.0);
+//    glVertex3f(0.0, 1.0, 0.0);	/*  Y axis */
 
-    glColor3f(0.0, 0.0, 1.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glVertex3f(0.0, 0.0, 1.0);	/*  Z axis */
+//    glColor3f(0.0, 0.0, 1.0);
+//    glVertex3f(0.0, 0.0, 0.0);
+//    glVertex3f(0.0, 0.0, 1.0);	/*  Z axis */
     glEnd();
     if (lighting)
-    glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHTING);
     if (lighting)
-    glEnable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
     glColor3f(1.0, 1.0, 1.0);
     glPopMatrix();
 }
@@ -811,66 +800,66 @@ void HelpDisplay(GLint ww, GLint wh)
     linestart = 10;
 
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font, "Help Menu");
+            linespace, Help_Font, "Help Menu");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font, "---------");
+            linespace, Help_Font, "---------");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "H/h = Toggle Help Menu");
+            linespace, Help_Font,
+                           "H/h = Toggle Help Menu");
     if (!full_screen)
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               "TAB = Activate Full Screen");
     HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   "TAB = Activate Full Screen");
+            linespace, Help_Font,
+                           "Esc = Exits Program");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "Esc = Exits Program");
+            linespace, Help_Font,
+                           "R/r = Reset Position");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "R/r = Reset Position");
+            linespace, Help_Font,
+                           "C/c = Toggle Axis");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "C/c = Toggle Axis");
+            linespace, Help_Font,
+                           "W/w = Toggle Wireframe");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "W/w = Toggle Wireframe");
+            linespace, Help_Font,
+                           "D/d = Toggle Double Sided Polygons");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "D/d = Toggle Double Sided Polygons");
+            linespace, Help_Font,
+                           "S/s = Toggle Smooth Shading");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "S/s = Toggle Smooth Shading");
+            linespace, Help_Font,
+                           "M/m = Toggle Materials");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "M/m = Toggle Materials");
+            linespace, Help_Font,
+                           "T/t = Toggle Textures");
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "T/t = Toggle Textures");
-    HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "B/b = Toggle Auto Rotate");
+            linespace, Help_Font,
+                           "B/b = Toggle Auto Rotate");
     /* HelpRenderBitmapString(30,linestart+=linespace,(void *)Help_Font, "L/l = Toggle Line Smoothing");    */
 #ifdef AVL
     HelpRenderBitmapString(30, linestart +=
-               linespace, Help_Font,
-               "F/f = Flip Textures");
+            linespace, Help_Font,
+                           "F/f = Flip Textures");
 #endif
 
     if (stereo) {
-    HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   "Stereo Variables");
-    HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   "----------------");
-    HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   "</, = Decrease Eye Separation");
-    HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   ">/. = Increase Eye Separation");
-    HelpRenderBitmapString(30, linestart +=
-                   linespace, Help_Font,
-                   "+/- = Increase/Decrease Focus Distance");
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               "Stereo Variables");
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               "----------------");
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               "</, = Decrease Eye Separation");
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               ">/. = Increase Eye Separation");
+        HelpRenderBitmapString(30, linestart +=
+                linespace, Help_Font,
+                               "+/- = Increase/Decrease Focus Distance");
     }
 
     glPopMatrix();
@@ -883,7 +872,7 @@ void HelpDisplay(GLint ww, GLint wh)
     glMatrixMode(GL_MODELVIEW);
 
     if (lighting)
-    glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 }
 
@@ -897,7 +886,7 @@ void HelpRenderBitmapString(float x, float y, void *font, char *string)
     glRasterPos2f(x, y);
     /*  loop all the characters in the string */
     for (c = string; *c != '\0'; c++) {
-    glutBitmapCharacter(font, *c);
+        glutBitmapCharacter(font, *c);
     }
 }
 
@@ -908,7 +897,7 @@ void Display(void)
 {
 
 
-/*    GLint viewport[4]; */
+    /*    GLint viewport[4]; */
     /*
        int jitter;
 
@@ -928,99 +917,114 @@ void Display(void)
      */
 
     if (lighting) {
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
     } else {
-    glDisable(GL_LIGHTING);
-    glDisable(GL_LIGHT0);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
     }
 
     if (stereo) {
-    /* Clear right and left eye buffers */
-    glDrawBuffer(GL_BACK_RIGHT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        /* Clear right and left eye buffers */
+        glDrawBuffer(GL_BACK_RIGHT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    /* Right Eye */
-    /* glMatrixMode(GL_PROJECTION); */
-    /* glLoadIdentity(); */
-    /* gluPerspective(45,(double)ww/(double)wh, 0.1, _zFar); */
+        /* Right Eye */
+        /* glMatrixMode(GL_PROJECTION); */
+        /* glLoadIdentity(); */
+        /* gluPerspective(45,(double)ww/(double)wh, 0.1, _zFar); */
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glDrawBuffer(GL_BACK_RIGHT);
-    glLoadIdentity();
-    gluLookAt(EyeSep / 2, 0, EyeBack, FocusX, FocusY, FocusZ, 0, 1, 0);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glDrawBuffer(GL_BACK_RIGHT);
+        glLoadIdentity();
+        gluLookAt(EyeSep / 2, 0, EyeBack, FocusX, FocusY, FocusZ, 0, 1, 0);
 
-    glTranslatef(0, 0, centerZ);
-    glMultMatrixd(_matrix);
+        glTranslatef(0, 0, centerZ);
+        glMultMatrixd(_matrix);
 
-//	if (show_axis)
-//	    DrawAxis(1.0f);
-//	if (wireframe)		/* if Wireframe is checked */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
-//	else			/* else */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
+        //	if (show_axis)
+        //	    DrawAxis(1.0f);
+        //	if (wireframe)		/* if Wireframe is checked */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
+        //	else			/* else */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
 
-    DrawModel();
-    glTranslatef(0, 0, -centerZ);
-    glPopMatrix();
-
-
-    /* Left Eye */
-    /* glMatrixMode(GL_PROJECTION); */
-    /* glLoadIdentity(); */
-    /* gluPerspective(45,(double)ww/(double)wh, 0.1, _zFar); */
-    glDrawBuffer(GL_BACK_LEFT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        DrawModel();
+        glTranslatef(0, 0, -centerZ);
+        glPopMatrix();
 
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    /* glDrawBuffer(GL_BACK_LEFT); */
-    glLoadIdentity();
-    gluLookAt(-EyeSep / 2, 0, EyeBack,
-          FocusX, FocusY, FocusZ, 0, 1, 0);
-    glPushMatrix();
+        /* Left Eye */
+        /* glMatrixMode(GL_PROJECTION); */
+        /* glLoadIdentity(); */
+        /* gluPerspective(45,(double)ww/(double)wh, 0.1, _zFar); */
+        glDrawBuffer(GL_BACK_LEFT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glTranslatef(0, 0, centerZ);
-    glMultMatrixd(_matrix);
 
-//	if (show_axis)
-//	    DrawAxis(1.0f);
-//	if (wireframe)		/* if Wireframe is checked */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
-//	else			/* else */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        /* glDrawBuffer(GL_BACK_LEFT); */
+        glLoadIdentity();
+        gluLookAt(-EyeSep / 2, 0, EyeBack,
+                  FocusX, FocusY, FocusZ, 0, 1, 0);
+        glPushMatrix();
 
-    DrawModel();
-    glTranslatef(0, 0, -centerZ);
-    glPopMatrix();
-    glPopMatrix();
+        glTranslatef(0, 0, centerZ);
+        glMultMatrixd(_matrix);
+
+        //	if (show_axis)
+        //	    DrawAxis(1.0f);
+        //	if (wireframe)		/* if Wireframe is checked */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
+        //	else			/* else */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
+
+        DrawModel();
+        glTranslatef(0, 0, -3);
+        glPopMatrix();
+        glPopMatrix();
     } else {			/* NON stereo mode */
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glPushMatrix();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glPushMatrix();
 
-    glLoadIdentity();
-    glTranslatef(0, 0, centerZ);	/* to center object down Z */
-    glMultMatrixd(_matrix);
+        glLoadIdentity();
+        glTranslatef(0, 0, -0.3);	/* to center object down Z */
+        glMultMatrixd(_matrix);
 
-//	if (show_axis)
-//	    DrawAxis(1.0f);
-//	if (wireframe)		/* if Wireframe is checked */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
-//	else			/* else */
-//	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
+        //	if (show_axis)
+        //	    DrawAxis(1.0f);
+        //	if (wireframe)		/* if Wireframe is checked */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	/* draw wireframe */
+        //	else			/* else */
+        //	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	/* draw filled polygons */
 
-    DrawModel();
-    glTranslatef(0, 0, -centerZ);	/* to center object down Z */
-    glPopMatrix();
+        DrawModel();
+        glTranslatef(0, 0, 0.3);	/* to center object down Z */
+        glPopMatrix();
     }
 
     if (show_help)
-    HelpDisplay(ww, wh);
+        HelpDisplay(ww, wh);
 
 
     glutSwapBuffers();
+
+    cv::Mat frontBuffer(480,640,CV_8UC3);
+    cv::Mat depthBuffer(480,640,CV_32F);
+
+    glReadPixels(0,0,frontBuffer.cols, frontBuffer.rows, GL_BGR, GL_UNSIGNED_BYTE , frontBuffer.data);
+    glReadPixels(0,0,depthBuffer.cols, depthBuffer.rows, GL_DEPTH_COMPONENT , GL_FLOAT,depthBuffer.data);
+
+    cv::flip(frontBuffer, frontBuffer, 0);
+    cv::flip(depthBuffer, depthBuffer, 0);
+
+    depthBuffer = depthBuffer * 255;
+
+    cv::imwrite("test.png",frontBuffer);
+    cv::imwrite("depth.png",depthBuffer);
+    std::cout << depthBuffer << std::endl;
 }

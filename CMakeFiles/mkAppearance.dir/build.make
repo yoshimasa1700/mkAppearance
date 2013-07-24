@@ -90,6 +90,21 @@ mkAppearance: /usr/lib/x86_64-linux-gnu/libXext.so
 mkAppearance: /usr/lib/x86_64-linux-gnu/libglut.so
 mkAppearance: /usr/lib/x86_64-linux-gnu/libXmu.so
 mkAppearance: /usr/lib/x86_64-linux-gnu/libXi.so
+mkAppearance: /usr/lib/libopencv_calib3d.so
+mkAppearance: /usr/lib/libopencv_contrib.so
+mkAppearance: /usr/lib/libopencv_core.so
+mkAppearance: /usr/lib/libopencv_features2d.so
+mkAppearance: /usr/lib/libopencv_flann.so
+mkAppearance: /usr/lib/libopencv_highgui.so
+mkAppearance: /usr/lib/libopencv_imgproc.so
+mkAppearance: /usr/lib/libopencv_legacy.so
+mkAppearance: /usr/lib/libopencv_ml.so
+mkAppearance: /usr/lib/libopencv_objdetect.so
+mkAppearance: /usr/lib/libopencv_photo.so
+mkAppearance: /usr/lib/libopencv_stitching.so
+mkAppearance: /usr/lib/libopencv_ts.so
+mkAppearance: /usr/lib/libopencv_video.so
+mkAppearance: /usr/lib/libopencv_videostab.so
 mkAppearance: CMakeFiles/mkAppearance.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable mkAppearance"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mkAppearance.dir/link.txt --verbose=$(VERBOSE)
