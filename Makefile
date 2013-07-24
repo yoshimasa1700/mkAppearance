@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/masahiko/Programs/mkAppearance
+CMAKE_SOURCE_DIR = /home/masahiko/Program/mkAppearance
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/masahiko/Programs/mkAppearance
+CMAKE_BINARY_DIR = /home/masahiko/Program/mkAppearance
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/masahiko/Programs/mkAppearance/CMakeFiles /home/masahiko/Programs/mkAppearance/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/masahiko/Program/mkAppearance/CMakeFiles /home/masahiko/Program/mkAppearance/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/masahiko/Programs/mkAppearance/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/masahiko/Program/mkAppearance/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +111,30 @@ mkAppearance/fast:
 	$(MAKE) -f CMakeFiles/mkAppearance.dir/build.make CMakeFiles/mkAppearance.dir/build
 .PHONY : mkAppearance/fast
 
+globjloader.o: globjloader.cpp.o
+.PHONY : globjloader.o
+
+# target to build an object file
+globjloader.cpp.o:
+	$(MAKE) -f CMakeFiles/mkAppearance.dir/build.make CMakeFiles/mkAppearance.dir/globjloader.cpp.o
+.PHONY : globjloader.cpp.o
+
+globjloader.i: globjloader.cpp.i
+.PHONY : globjloader.i
+
+# target to preprocess a source file
+globjloader.cpp.i:
+	$(MAKE) -f CMakeFiles/mkAppearance.dir/build.make CMakeFiles/mkAppearance.dir/globjloader.cpp.i
+.PHONY : globjloader.cpp.i
+
+globjloader.s: globjloader.cpp.s
+.PHONY : globjloader.s
+
+# target to generate assembly for a file
+globjloader.cpp.s:
+	$(MAKE) -f CMakeFiles/mkAppearance.dir/build.make CMakeFiles/mkAppearance.dir/globjloader.cpp.s
+.PHONY : globjloader.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -144,6 +168,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... mkAppearance"
 	@echo "... rebuild_cache"
+	@echo "... globjloader.o"
+	@echo "... globjloader.i"
+	@echo "... globjloader.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

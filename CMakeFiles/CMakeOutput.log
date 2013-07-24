@@ -349,3 +349,93 @@ Linking C executable cmTryCompileExec351731518
 make[1]: ディレクトリ `/home/masahiko/Programs/mkAppearance/CMakeFiles/CMakeTmp' から出ます
 
 
+Determining if the function XOpenDisplay exists in the /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1221316348/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1221316348.dir/build.make CMakeFiles/cmTryCompileExec1221316348.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1221316348.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=XOpenDisplay   -o CMakeFiles/cmTryCompileExec1221316348.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1221316348
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1221316348.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=XOpenDisplay    CMakeFiles/cmTryCompileExec1221316348.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1221316348 -rdynamic -lX11 -lXext 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+
+Determining if the function gethostbyname exists passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3752547509/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3752547509.dir/build.make CMakeFiles/cmTryCompileExec3752547509.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3752547509.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=gethostbyname   -o CMakeFiles/cmTryCompileExec3752547509.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3752547509
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3752547509.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=gethostbyname    CMakeFiles/cmTryCompileExec3752547509.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3752547509 -rdynamic 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+
+Determining if the function connect exists passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3606898348/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3606898348.dir/build.make CMakeFiles/cmTryCompileExec3606898348.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3606898348.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=connect   -o CMakeFiles/cmTryCompileExec3606898348.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3606898348
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3606898348.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=connect    CMakeFiles/cmTryCompileExec3606898348.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3606898348 -rdynamic 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+
+Determining if the function remove exists passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3772077890/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3772077890.dir/build.make CMakeFiles/cmTryCompileExec3772077890.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3772077890.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=remove   -o CMakeFiles/cmTryCompileExec3772077890.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3772077890
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3772077890.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=remove    CMakeFiles/cmTryCompileExec3772077890.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3772077890 -rdynamic 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+
+Determining if the function shmat exists passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1732411311/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1732411311.dir/build.make CMakeFiles/cmTryCompileExec1732411311.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1732411311.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=shmat   -o CMakeFiles/cmTryCompileExec1732411311.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1732411311
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1732411311.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=shmat    CMakeFiles/cmTryCompileExec1732411311.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1732411311 -rdynamic 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+
+Determining if the function IceConnectionNumber exists in the ICE passed with the following output:
+Change Dir: /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1410252254/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1410252254.dir/build.make CMakeFiles/cmTryCompileExec1410252254.dir/build
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1410252254.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=IceConnectionNumber   -o CMakeFiles/cmTryCompileExec1410252254.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1410252254
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1410252254.dir/link.txt --verbose=1
+/usr/bin/cc     -DCHECK_FUNCTION_EXISTS=IceConnectionNumber    CMakeFiles/cmTryCompileExec1410252254.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1410252254 -rdynamic -lICE 
+make[1]: ディレクトリ `/home/masahiko/Program/mkAppearance/CMakeFiles/CMakeTmp' から出ます
+
+

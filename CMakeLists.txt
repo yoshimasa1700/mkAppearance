@@ -38,7 +38,7 @@ INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR} /usr/local/include ${OPENGL_INCLUDE_D
 # ライブラリの場所
 LINK_DIRECTORIES("/usr/local/lib")
 
-SET(SOURCE main.cpp)
+SET(SOURCE main.cpp globjloader.cpp)
 
 # 実行ファイルを生成
 ADD_EXECUTABLE(mkAppearance ${SOURCE})

@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/mkAppearance.dir/main.cpp.o"
+  "CMakeFiles/mkAppearance.dir/globjloader.cpp.o"
   "mkAppearance.pdb"
   "mkAppearance"
 )

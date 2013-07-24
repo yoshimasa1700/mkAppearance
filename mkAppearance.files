@@ -29,3 +29,5 @@ glutobj.c
 gmon.out
 main.cpp
 mkAppearance
+globjloader.h
+globjloader.cpp

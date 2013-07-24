@@ -1,1 +1,1 @@
-/home/masahiko/Programs/mkAppearance/CMakeFiles/mkAppearance.dir
+/home/masahiko/Program/mkAppearance/CMakeFiles/mkAppearance.dir
